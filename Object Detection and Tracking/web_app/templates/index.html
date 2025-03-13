@@ -1,1 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Monitoring System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background-color: #000;
+            margin-bottom: 15px;
+        }
+        .video-feed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .video-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .stats-panel {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
+        .stats-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .stats-item {
+            margin-bottom: 10px;
+        }
+        .control-panel {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-group {
+            margin-top: 10px;
+        }
+        .chart-container {
+            height: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">Traffic Monitoring System</h1>
+        
+        <!-- Control Panel -->
+        <div class="row">
+            <div class="col-12">
+                <div class="control-panel">
+                    <h4>Control Panel</h4>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                {% for i in range(4) %}
+                                <div class="col-md-6 mb-2">
+                                    <label for="stream-select-{{ i }}" class="form-label">Stream {{ i+1 }}:</label>
+                                    <select class="form-select stream-selector" id="stream-select-{{ i }}" data-position="{{ i }}">
+                                        {% for j in range(stream_names|length) %}
+                                        <option value="{{ j }}">{{ stream_names[j] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" id="start-all-btn">Start All</button>
+                                <button class="btn btn-danger" id="stop-all-btn">Stop All</button>
+                                <button class="btn btn-secondary" id="snapshot-btn">Take Snapshot</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Video Feeds -->
+            <div class="col-md-8">
+                <div class="row">
+                    {% for i in range(4) %}
+                    <div class="col-md-6">
+                        <div class="video-container">
+                            <img class="video-feed" id="video-feed-{{ i }}" src="/static/placeholder.jpg" alt="Video Feed {{ i+1 }}">
+                            <div class="video-status" id="video-status-{{ i }}">No Stream Selected</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Statistics Panel -->
+            <div class="col-md-4">
+                <div class="stats-panel">
+                    <div class="stats-title">Traffic Statistics</div>
+                    
+                    <!-- Object Counts -->
+                    <div class="mb-4">
+                        <h5>Object Counts</h5>
+                        <div id="object-counts">
+                            <div class="stats-item">
+                                <i class="fas fa-user"></i> Persons: <span id="count-person">0</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-car"></i> Cars: <span id="count-car">0</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-bicycle"></i> Bicycles: <span id="count-bicycle">0</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-motorcycle"></i> Motorcycles: <span id="count-motorcycle">0</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-bus"></i> Buses: <span id="count-bus">0</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-truck"></i> Trucks: <span id="count-truck">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts -->
+                    <div>
+                        <h5>Traffic Flow</h5>
+                        <div class="chart-container">
+                            <canvas id="traffic-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Snapshots -->
+                    <div class="mt-4">
+                        <h5>Recent Snapshots</h5>
+                        <div id="snapshots-list" class="list-group">
+                            <!-- Snapshots will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    
+    <script>
+        // Connect to WebSocket server
+        const socket = io();
+        
+        // Chart initialization
+        const ctx = document.getElementById('traffic-chart').getContext('2d');
+        const trafficChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(20).fill('').map((_, i) => i),
+                datasets: [
+                    { label: 'Cars', data: Array(20).fill(0), borderColor: 'rgba(255, 0, 0, 1)', tension: 0.4 },
+                    { label: 'Persons', data: Array(20).fill(0), borderColor: 'rgba(255, 165, 0, 1)', tension: 0.4 },
+                    { label: 'Trucks', data: Array(20).fill(0), borderColor: 'rgba(0, 255, 255, 1)', tension: 0.4 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                animation: { duration: 0 }
+            }
+        });
+        
+        // Global variables
+        let selectedStream = 0;
+        const streamSelectors = document.querySelectorAll('.stream-selector');
+        const videoFeeds = document.querySelectorAll('.video-feed');
+        const videoStatuses = document.querySelectorAll('.video-status');
+        
+        // Event listeners
+        document.getElementById('start-all-btn').addEventListener('click', startAllStreams);
+        document.getElementById('stop-all-btn').addEventListener('click', stopAllStreams);
+        document.getElementById('snapshot-btn').addEventListener('click', takeSnapshot);
+        
+        streamSelectors.forEach(selector => {
+            selector.addEventListener('change', function() {
+                const position = parseInt(this.dataset.position);
+                const streamIndex = parseInt(this.value);
+                changeStream(position, streamIndex);
+            });
+        });
+        
+        videoFeeds.forEach((feed, index) => {
+            feed.addEventListener('click', function() {
+                selectedStream = index;
+            });
+        });
+        
+        // Socket event handlers
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+        
+        socket.on('stream_options', function(options) {
+            console.log('Received stream options:', options);
+        });
+        
+        socket.on('frame_update', function(frameData) {
+            for (const [position, base64Image] of Object.entries(frameData)) {
+                const feed = document.getElementById(`video-feed-${position}`);
+                feed.src = `data:image/jpeg;base64,${base64Image}`;
+            }
+        });
+        
+        socket.on('stats_update', function(statsData) {
+            updateStatistics(statsData);
+        });
+        
+        socket.on('stream_status', function(data) {
+            const statusElement = document.getElementById(`video-status-${data.position}`);
+            statusElement.textContent = data.status;
+        });
+        
+        socket.on('snapshot_taken', function(data) {
+            addSnapshotToList(data);
+        });
+        
+        // Functions
+        function changeStream(position, streamIndex) {
+            socket.emit('change_stream', { position, stream_index: streamIndex });
+        }
+        
+        function startAllStreams() {
+            const selectedValues = Array.from(streamSelectors).map(selector => parseInt(selector.value));
+            socket.emit('start_all', selectedValues);
+        }
+        
+        function stopAllStreams() {
+            socket.emit('stop_all');
+        }
+        
+        function takeSnapshot() {
+            socket.emit('take_snapshot', { position: selectedStream });
+        }
+        
+        function updateStatistics(statsData) {
+            // Combine stats from all streams
+            const combinedStats = {};
+            
+            for (const streamStats of Object.values(statsData)) {
+                for (const [className, count] of Object.entries(streamStats)) {
+                    if (combinedStats[className]) {
+                        combinedStats[className] += count;
+                    } else {
+                        combinedStats[className] = count;
+                    }
+                }
+            }
+            
+            // Update count displays
+            for (const [className, count] of Object.entries(combinedStats)) {
+                const countElement = document.getElementById(`count-${className}`);
+                if (countElement) {
+                    countElement.textContent = count;
+                }
+            }
+            
+            // Update chart
+            updateChart(combinedStats);
+        }
+        
+        function updateChart(stats) {
+            // Update chart data
+            if (stats.car !== undefined) {
+                trafficChart.data.datasets[0].data.push(stats.car);
+                trafficChart.data.datasets[0].data.shift();
+            }
+            
+            if (stats.person !== undefined) {
+                trafficChart.data.datasets[1].data.push(stats.person);
+                trafficChart.data.datasets[1].data.shift();
+            }
+            
+            if (stats.truck !== undefined) {
+                trafficChart.data.datasets[2].data.push(stats.truck);
+                trafficChart.data.datasets[2].data.shift();
+            }
+            
+            trafficChart.update();
+        }
+        
+        function addSnapshotToList(data) {
+            const snapshotsList = document.getElementById('snapshots-list');
+            const listItem = document.createElement('a');
+            listItem.href = `/${data.filepath}`;
+            listItem.className = 'list-group-item list-group-item-action';
+            listItem.target = '_blank';
+            listItem.textContent = `Stream ${data.position + 1} - ${data.filename}`;
+            
+            // Add to the beginning of the list
+            snapshotsList.insertBefore(listItem, snapshotsList.firstChild);
+            
+            // Limit the list to 5 items
+            if (snapshotsList.children.length > 5) {
+                snapshotsList.removeChild(snapshotsList.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
