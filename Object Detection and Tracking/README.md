@@ -26,7 +26,7 @@ This project provides a traffic monitoring solution with both desktop and web in
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/yourusername/traffic-monitoring-system.git
+git clone https://github.com/Kedhareswer/ML_Projects.git
 cd traffic-monitoring-system
 ```
 
