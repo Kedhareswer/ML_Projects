@@ -20,6 +20,12 @@ A comprehensive collection of machine learning projects showcasing various appli
 | Video Game Sales EDA | Data Analysis | Pandas, Matplotlib | ⭐⭐☆☆☆ | ✅ Complete |
 | House Price Prediction | Regression | Scikit-learn | ⭐⭐⭐☆☆ | ✅ Complete |
 | Netflix Stock Price Prediction | Time Series | TensorFlow, LSTM | ⭐⭐⭐⭐☆ | ✅ Complete |
+| MNIST | Image Classification | TensorFlow, Keras, TFLite | ⭐⭐⭐⭐☆ | ✅ Complete |
+| Image to Sketch | Computer Vision / Image Processing | OpenCV, Pillow | ⭐⭐☆☆☆ | ✅ Complete |
+| Moonknight | General | Python | ⭐⭐⭐☆☆ | ✅ Complete |
+| Optimal Fertilizer Prediction | Predictive Modeling | Scikit-learn, Pandas | ⭐⭐⭐⭐☆ | ✅ Complete |
+| Rainfall Prediction | Time Series | Pandas, Scikit-learn | ⭐⭐⭐⭐☆ | ✅ Complete |
+| Sentiment Analysis (DistilBERT) | NLP | Transformers, Hugging Face | ⭐⭐⭐⭐☆ | ✅ Complete |
 
 ## 📈 Project Performance Metrics
 
@@ -104,6 +110,41 @@ Time series forecasting model for predicting sticker sales using Prophet.
 - Confidence intervals
 </details>
 
+### 4. MNIST Handwritten Digit Recognition ✍️
+<details>
+<summary>Click to expand</summary>
+
+#### Overview
+CNN model for classifying handwritten digits (0-9) from the MNIST dataset. This project demonstrates a robust pipeline including data augmentation, model training with various callbacks for optimal performance, detailed evaluation, and conversion of the trained model to TFLite format for deployment on edge devices.
+
+#### Model Architecture
+The model is a Sequential Convolutional Neural Network with the following key layers:
+- Input layer with GaussianNoise for regularization.
+- Two blocks of:
+    - `Conv2D` (32 filters, then 64 filters) with `relu` activation and L2 regularization.
+    - `BatchNormalization`.
+    - `MaxPooling2D`.
+    - `Dropout`.
+- `GlobalAveragePooling2D` to reduce dimensions.
+- A `Dense` hidden layer (128 units, `relu`, L2 regularization) with `BatchNormalization` and `Dropout`.
+- A `Dense` output layer (10 units, `softmax` activation) for classification.
+
+#### Performance
+| Metric                          | Score   |
+|---------------------------------|---------|
+| Final Test Accuracy             | 99.55%  |
+| Accuracy on Noisy Test Set    | 99.56%  |
+
+#### Key Features
+- High accuracy (over 99.5%) in handwritten digit classification.
+- Effective data augmentation (rotation, width/height shifts, zoom, shear).
+- Utilization of callbacks: `ModelCheckpoint` (save best), `EarlyStopping` (prevent overfitting), `ReduceLROnPlateau` (adaptive learning rate).
+- Trained model saved in Keras format (`mnist_final_model.keras`).
+- Model successfully converted to TensorFlow Lite format (`mnist_model.tflite`) for efficient deployment on mobile and edge devices.
+- Comprehensive evaluation including a classification report and confusion matrix.
+- Demonstrated robustness with high accuracy maintained on a noisy version of the test set.
+</details>
+
 ## 💻 Technologies Used
 
 ```
@@ -158,10 +199,16 @@ Matplotlib    ████████████          60%
 | Video Game Sales | Tabular | Analysis | EDA | N/A |
 | House Prices | Tabular | Regression | Random Forest | 91.2% |
 | Stock Prediction | Time Series | Predictions | LSTM | 87.5% |
+| MNIST | Images (28x28 grayscale) | Digit (0-9) | CNN | 99.5% |
+| Image to Sketch | Image | Image (sketch) | Image Processing | N/A |
+| Moonknight | Text | Analysis/Classification | General ML | TBD |
+| Optimal Fertilizer Prediction | Tabular Data | Fertilizer Recommendation | Predictive Model | TBD |
+| Rainfall Prediction | Time Series Data | Rainfall Forecast | Time Series Model | TBD |
+| Sentiment Analysis (DistilBERT) | Text | Sentiment Classification | Transformer (DistilBERT) | TBD |
 
 ## 📈 Project Stats
 
-- **Total Projects**: 6
+- **Total Projects**: 12
 - **Technologies Used**: 7
 - **Last Updated**: June 2025
 - **Active Development**: Yes
