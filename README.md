@@ -15,7 +15,7 @@ A comprehensive collection of machine learning projects showcasing various appli
 | Project Name | Category | Technologies | Complexity | Status |
 |-------------|----------|--------------|------------|---------|
 | Emotion Analysis | Computer Vision | TensorFlow, Keras | ⭐⭐⭐⭐☆ | ✅ Complete |
-| CIFAR-100 CNN | Image Classification | TensorFlow.js, CNN | ⭐⭐⭐⭐⭐ | ✅ Complete |
+| CIFAR-100 CNN | Image Classification | TensorFlow.js, CNN | ⭐⭐⭐⭐☆ | ✅ Complete |
 | Forecasting Sticker Sales | Time Series | Prophet, Pandas | ⭐⭐⭐☆☆ | ✅ Complete |
 | Video Game Sales EDA | Data Analysis | Pandas, Matplotlib | ⭐⭐☆☆☆ | ✅ Complete |
 | House Price Prediction | Regression | Scikit-learn | ⭐⭐⭐☆☆ | ✅ Complete |
