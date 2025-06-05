@@ -179,7 +179,7 @@ Matplotlib    ████████████          60%
 2. **Set up the environment:**
    ```bash
    python -m venv env
-   source env/bin/activate  # On Windows: .\env\Scripts\activate
+   source env/bin/activate  # On Windows: .nv\Scriptsctivate
    pip install -r requirements.txt
    ```
 
@@ -240,3 +240,37 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![GitHub forks](https://img.shields.io/github/forks/Kedhareswer/ML_Projects.svg?style=social&label=Fork)](https://github.com/Kedhareswer/ML_Projects/fork)
 
 </div>
+
+## AI Projects Portfolio
+
+This section outlines several AI project ideas, complete with foundational structures for further development.
+
+### [Ai Art Style Transfer](./ai_art_style_transfer/README.md)
+- **Description:** AI Art Style Transfer App
+- **Type:** DL (CV + GANs)
+- **Value Summary:** Creative industry, AR filters, photo apps
+
+### [Speech Emotion Recognition](./speech_emotion_recognition/README.md)
+- **Description:** Real-Time Speech Emotion Recognition
+- **Type:** Audio ML + DL
+- **Value Summary:** Sentiment monitoring in support teams
+
+### [Ai Game Bot](./ai_game_bot/README.md)
+- **Description:** AI Game Bot (Deep Reinforcement Learning)
+- **Type:** RL
+- **Value Summary:** Entertainment, teaching reinforcement learning
+
+### [Deepfake Voice Cloner](./deepfake_voice_cloner/README.md)
+- **Description:** Real-Time Deepfake Voice Cloner
+- **Type:** Audio DL (Voice Synthesis)
+- **Value Summary:** Entertainment, dubbing, localization
+
+### [Childrens Story Generator](./childrens_story_generator/README.md)
+- **Description:** Children’s Story Generator with Illustrations
+- **Type:** NLP + Image Gen
+- **Value Summary:** Edutainment for kids and educators
+
+### [Accent Converter](./accent_converter/README.md)
+- **Description:** Accent Converter (Speech-to-Speech)
+- **Type:** Audio ML + TTS
+- **Value Summary:** Localization, language learning
